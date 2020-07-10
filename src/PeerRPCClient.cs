@@ -1,23 +1,23 @@
-using Grenache.Models.PeerRPC;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Grenache.Models.PeerRPC;
 
 namespace Grenache
 {
   public abstract class PeerRPCClient
   {
-    protected readonly Link link;
-    protected readonly long cacheAge;
-    protected Dictionary<string, LookupValue> lookups;
+    protected Link Link { get; set; }
+    protected long CacheAge { get; set; }
+    protected Dictionary<string, LookupValue> Lookups { get; set; }
 
     public PeerRPCClient(Link link, long cacheAge = 120 * 1000)
     {
-      this.link = link;
-      this.cacheAge = cacheAge;
-      this.lookups = new Dictionary<string, LookupValue>();
+      Link = link;
+      CacheAge = cacheAge;
+      Lookups = new Dictionary<string, LookupValue>();
     }
 
     public async Task<RpcClientResponse> Request(string service, object payload)
@@ -50,27 +50,27 @@ namespace Grenache
     protected async Task<LookupValue> ResolveService(string service)
     {
       long now = DateTime.Now.Ticks;
-      bool hasKey = lookups.ContainsKey(service);
-      if (!hasKey || now - lookups[service].LastUpdated > cacheAge)
+      bool hasKey = Lookups.ContainsKey(service);
+      if (!hasKey || now - Lookups[service].LastUpdated > CacheAge)
       {
-        var res = await link.Lookup(service);
+        var res = await Link.Lookup(service);
         if (hasKey)
         {
-          lookups[service].Endpoints = res;
-          lookups[service].LastUpdated = now;
+          Lookups[service].Endpoints = res;
+          Lookups[service].LastUpdated = now;
         }
         else
         {
-          lookups.Add(service, new LookupValue { LastUpdated = now, Endpoints = res });
+          Lookups.Add(service, new LookupValue { LastUpdated = now, Endpoints = res });
         }
       }
 
-      return lookups[service];
+      return Lookups[service];
     }
 
-    public static T ParseRpcResponseData<T> (RpcClientResponse response)
+    public static T ParseRpcResponseData<T>(RpcClientResponse response)
     {
-      return JsonConvert.DeserializeObject<T> (response.Data);
+      return JsonConvert.DeserializeObject<T>(response.Data);
     }
 
     protected abstract Task<RpcClientResponse> Send(string endpoint, Object[] req);

@@ -1,10 +1,7 @@
-using Grenache.Models.PeerRPC;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Grenache.Models.PeerRPC;
 
 namespace Grenache
 {

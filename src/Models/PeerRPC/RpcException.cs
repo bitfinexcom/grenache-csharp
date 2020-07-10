@@ -13,9 +13,6 @@ namespace Grenache.Models.PeerRPC
       RpcData = rpcData;
     }
 
-    public RpcException(RpcClientResponse response) : this(response.Error, response.RId, response.Data)
-    {
-
-    }
+    public RpcException(RpcClientResponse response) : this(response.Error, response.RId, response.Data) { }
   }
 }
