@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Grenache.Models
+namespace Grenache.Models.Link
 {
   public class PutRequest : RequestBase
   {

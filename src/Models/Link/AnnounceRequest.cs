@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Grenache.Models
+namespace Grenache.Models.Link
 {
   public class AnnounceRequestConverter : JsonConverter
   {

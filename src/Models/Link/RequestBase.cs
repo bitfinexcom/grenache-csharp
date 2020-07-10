@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Grenache.Models
+namespace Grenache.Models.Link
 {
   public class RequestBase
   {
