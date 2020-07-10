@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>grenache_csharp</RootNamespace>
+    <PackageId>Grenache</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>vigan.abd</Authors>
+    <Company>Bitfinex</Company>
+    <Title>Grenache.NET</Title>
+    <PackageTags>Greenache</PackageTags>
+    <PackageDescription>This package provides Grenache microservice implementation for .NETCORE</PackageDescription>
+    <Description>This package provides Grenache microservice implementation for .NETCORE</Description>
+    <Summary>This package provides Grenache microservice implementation for .NETCORE</Summary>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/bitfinexcom/grenache-csharp.git </RepositoryUrl>
+    <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="**/*.orig" />
+    <None Include="LICENSE" Pack="true" PackagePath="LICENSE" />
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+</Project>
