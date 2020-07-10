@@ -19,19 +19,25 @@ namespace Grenache
 
     protected override Task<bool> StartServer()
     {
-      var url = $"http://+:{Port}/";
-      Listener = new HttpListener();
-      Listener.Prefixes.Add(url);
-      RequestMap = new ConcurrentDictionary<string, HttpListenerResponse>();
-      ListenerTask = MainTask();
+      try
+      {
+        var url = $"http://+:{Port}/";
+        Listener = new HttpListener();
+        Listener.Prefixes.Add(url);
+        RequestMap = new ConcurrentDictionary<string, HttpListenerResponse>();
+        Listener.Start();
+        ListenerTask = MainTask();
 
-      return Task.FromResult(true);
+        return Task.FromResult(true);
+      }
+      catch
+      {
+        return Task.FromResult(false);
+      }
     }
 
     protected async Task MainTask()
     {
-      Listener.Start();
-
       while (Listener.IsListening)
       {
         try
