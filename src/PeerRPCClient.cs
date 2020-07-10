@@ -20,7 +20,7 @@ namespace Grenache
       this.lookups = new Dictionary<string, LookupValue>();
     }
 
-    public async Task<RpcResponse> Request(string service, object payload)
+    public async Task<RpcClientResponse> Request(string service, object payload)
     {
       var lookup = await ResolveService(service);
       if (lookup.Endpoints.Length == 0) throw new Exception("ERR_GRAPE_LOOKUP_EMPTY");
@@ -29,7 +29,7 @@ namespace Grenache
       return res;
     }
 
-    public async Task<RpcResponse[]> Map(string service, object payload)
+    public async Task<RpcClientResponse[]> Map(string service, object payload)
     {
       var lookup = await ResolveService(service);
       if (lookup.Endpoints.Length == 0) throw new Exception("ERR_GRAPE_LOOKUP_EMPTY");
@@ -39,9 +39,9 @@ namespace Grenache
       return res;
     }
 
-    protected async Task<RpcResponse> CallRequest(string service, string endpoint, object payload)
+    protected async Task<RpcClientResponse> CallRequest(string service, string endpoint, object payload)
     {
-      var req = new RpcRequest { Service = service, Payload = payload };
+      var req = new RpcClientRequest { Service = service, Payload = payload };
       var res = await Send(endpoint, req.ToArray());
       if (res.Error != null) throw new RpcException(res);
       return res;
@@ -68,11 +68,11 @@ namespace Grenache
       return lookups[service];
     }
 
-    public static T ParseRpcResponseData<T> (RpcResponse response)
+    public static T ParseRpcResponseData<T> (RpcClientResponse response)
     {
       return JsonConvert.DeserializeObject<T> (response.Data);
     }
 
-    protected abstract Task<RpcResponse> Send(string endpoint, Object[] req);
+    protected abstract Task<RpcClientResponse> Send(string endpoint, Object[] req);
   }
 }

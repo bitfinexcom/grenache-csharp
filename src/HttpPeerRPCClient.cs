@@ -13,12 +13,13 @@ namespace Grenache
   public class HttpPeerRPCClient : PeerRPCClient
   {
     protected readonly bool isSecure;
+
     public HttpPeerRPCClient(Link link, long cacheAge = 120 * 1000, bool isSecure = false) : base(link, cacheAge)
     {
       this.isSecure = isSecure;
     }
 
-    protected override async Task<RpcResponse> Send(string endpoint, object[] req)
+    protected override async Task<RpcClientResponse> Send(string endpoint, object[] req)
     {
       var url = $"{(isSecure ? "https" : "http")}://{endpoint}";
       var headers = new Dictionary<string, string>();
@@ -26,7 +27,7 @@ namespace Grenache
       var json = await HttpUtil.PostRequest<object[]>(url, req, headers);
 
       var res = JsonConvert.DeserializeObject<object[]>(json);
-      return RpcResponse.FromArray(res);
+      return RpcClientResponse.FromArray(res);
     }
   }
 }

@@ -2,15 +2,15 @@ using System;
 
 namespace Grenache.Models.PeerRPC
 {
-  public class RpcResponse
+  public class RpcClientResponse
   {
     public Guid RId { get; set; }
     public string Error { get; set; }
     public string Data { get; set; }
 
-    public static RpcResponse FromArray(object[] arr)
+    public static RpcClientResponse FromArray(object[] arr)
     {
-      return new RpcResponse
+      return new RpcClientResponse
       {
         RId = Guid.Parse(arr[0].ToString()),
         Error = arr[1] != null ? arr[1].ToString() : null,
