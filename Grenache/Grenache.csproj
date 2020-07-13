@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Grenache</RootNamespace>
     <PackageId>Grenache</PackageId>
-    <Version>0.0.1</Version>
+    <Version>0.0.1.2</Version>
     <Authors>vigan.abd</Authors>
     <Company>Bitfinex</Company>
     <Title>Grenache.NET</Title>
@@ -15,14 +15,14 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/bitfinexcom/grenache-csharp.git </RepositoryUrl>
     <PackageIcon>packageIcon.png</PackageIcon>
-    <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="**/*.orig" />
-    <None Include="LICENSE" Pack="true" PackagePath="LICENSE" />
-    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\"/>
+    <None Include="../LICENSE" Pack="true" PackagePath="" />
+    <None Include="../packageIcon.png" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>

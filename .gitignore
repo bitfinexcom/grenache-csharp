@@ -3,3 +3,4 @@ obj
 .vscode
 node_modules
 package-lock.json
+nuget.config
