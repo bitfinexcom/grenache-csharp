@@ -39,7 +39,63 @@ grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'
 ```
 
 ### Examples
+
+#### RPC Server / Client
+
+This RPC Server example announces a service called `rpc_test`
+on the overlay network. When a request from a client is received,
+it replies with `world`. It receives the payload `hello` from the
+client.
+
+The client sends `hello` and receives `world` from the server.
+
+Internally the DHT is asked for the IP of the server and then the
+request is done as Peer-to-Peer request via websockets.
+
+**Grape:**
+
+```bash
+grape --dp 20001 --aph 30001 --bn '127.0.0.1:20002'
+grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'
+```
+
+**Server:**
+
+```csharp
+using Grenache;
+using Grenache.Models.PeerRPC;
 ...
+
+Link link = new Link("http://127.0.0.1:30001");
+server = new HttpPeerRPCServer(link, 10000);
+
+server.AddRequestHandler((req, res) =>
+{
+  Console.WriteLine("Payload: " + req.Payload);
+  res.Invoke(new RpcServerResponse { RId = req.RId, Data = "world" });
+});
+
+var started = await server.Listen("rpc_test", 7070);
+if (!started) throw new Exception("Couldn't start the server!");
+
+await server.ListenerTask; // used to keep the app always running
+
+```
+
+**Client:**
+
+```csharp
+using Grenache;
+...
+
+Link link = new Link("http://127.0.0.1:30001");
+HttpPeerRPCClient client = new HttpPeerRPCClient(link);
+
+Console.WriteLine("Request: rpc_test hello");
+var rpcRes = await client.Request("rpc_test", "hello");
+Console.WriteLine("Response: " + rpcRes.Data);
+
+```
 
 ### Testing
 

@@ -8,6 +8,8 @@ if [[ $# -ne 2 ]]; then
   exit 1
 fi
 
+dotnet restore
+dotnet build
 cd "$BASEDIR/Grenache"
 cp ./nuget.config.example ./nuget.config
 sed -i "s/__USER__/$1/g" ./nuget.config

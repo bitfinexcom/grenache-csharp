@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grenache", "Grenache\Grenac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grenache.Test", "Grenache.Test\Grenache.Test.csproj", "{02C15FDA-3A4B-4F2D-8C97-CEA335BCD5AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grenache.Example.Client", "Grenache.Example.Client\Grenache.Example.Client.csproj", "{4C090060-1365-42B4-A4EC-025D1DA0C160}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grenache.Example.Link", "Grenache.Example.Link\Grenache.Example.Link.csproj", "{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grenache.Example.Server", "Grenache.Example.Server\Grenache.Example.Server.csproj", "{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +50,41 @@ Global
 		{02C15FDA-3A4B-4F2D-8C97-CEA335BCD5AE}.Release|x64.Build.0 = Release|Any CPU
 		{02C15FDA-3A4B-4F2D-8C97-CEA335BCD5AE}.Release|x86.ActiveCfg = Release|Any CPU
 		{02C15FDA-3A4B-4F2D-8C97-CEA335BCD5AE}.Release|x86.Build.0 = Release|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Debug|x64.Build.0 = Debug|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Debug|x86.Build.0 = Debug|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Release|x64.ActiveCfg = Release|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Release|x64.Build.0 = Release|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Release|x86.ActiveCfg = Release|Any CPU
+		{4C090060-1365-42B4-A4EC-025D1DA0C160}.Release|x86.Build.0 = Release|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Debug|x64.Build.0 = Debug|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Debug|x86.Build.0 = Debug|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Release|x64.ActiveCfg = Release|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Release|x64.Build.0 = Release|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB3CBD04-9E5B-446D-8437-CC79A3A59E29}.Release|x86.Build.0 = Release|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Debug|x64.Build.0 = Debug|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Debug|x86.Build.0 = Debug|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Release|x64.ActiveCfg = Release|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Release|x64.Build.0 = Release|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Release|x86.ActiveCfg = Release|Any CPU
+		{8F4B251B-E0CE-480E-BF04-62D240EC3CDD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
