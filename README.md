@@ -31,5 +31,13 @@ grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'
 ### Examples
 ...
 
+### Testing
+
+In order to run the unit tests simply run the cmd below, it will start all grapes and run the necessary tests.
+
+```bash
+./Grenache.Test/test.sh
+```
+
 ## Licensing
 Licensed under Apache License, Version 2.0

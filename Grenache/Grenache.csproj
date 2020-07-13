@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>grenache_csharp</RootNamespace>
+    <RootNamespace>Grenache</RootNamespace>
     <PackageId>Grenache</PackageId>
     <Version>0.0.1</Version>
     <Authors>vigan.abd</Authors>
