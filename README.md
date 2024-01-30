@@ -99,8 +99,12 @@ Console.WriteLine("Response: " + rpcRes.Data);
 
 ### Testing
 
-In order to run the unit tests simply run the cmd below, it will start all grapes and run the necessary tests.
+In order to run the unit tests first go to Grenache.Test directory. Once there install pm2 dependency via:
+```bash
+npm i
+```
 
+After that simply run:
 ```bash
 ./Grenache.Test/test.sh
 ```
