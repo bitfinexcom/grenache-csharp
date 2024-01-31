@@ -7,6 +7,8 @@ namespace Grenache.Example.Link
   {
     static async Task Main(string[] args)
     {
+      Utils.HttpUtil.SetClient(new System.Net.Http.HttpClient());
+
       var link = new Grenache.Link("http://127.0.0.1:30001");
       var announceRes = await link.Announce("rpc_test", 7070);
       Console.WriteLine("Service rpc_test announced: " + announceRes);

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Linq;
-using Grenache;
-using Grenache.Models.PeerRPC;
 
 namespace Grenache.Example.Client
 {
@@ -16,6 +14,8 @@ namespace Grenache.Example.Client
   {
     static async Task Main(string[] args)
     {
+      Utils.HttpUtil.SetClient(new System.Net.Http.HttpClient());
+
       Link link = new Link("http://127.0.0.1:30001");
       HttpPeerRPCClient client = new HttpPeerRPCClient(link);
 
@@ -35,7 +35,7 @@ namespace Grenache.Example.Client
 
       Console.WriteLine("Map Request: rpc_ping test map");
       var mapRpcRes = await client.Map("rpc_ping", "test map");
-      Console.WriteLine("Mapped Response: " + String.Join(",", mapRpcRes.Select(x => x.Data)));
+      Console.WriteLine("Mapped Response: " + string.Join(",", mapRpcRes.Select(x => x.Data)));
     }
   }
 }

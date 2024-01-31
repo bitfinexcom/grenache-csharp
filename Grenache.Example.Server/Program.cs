@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Grenache;
 using Grenache.Models.PeerRPC;
 
 namespace Grenache.Example.Server
@@ -10,6 +9,8 @@ namespace Grenache.Example.Server
     static HttpPeerRPCServer server;
     static async Task Main(string[] args)
     {
+      Utils.HttpUtil.SetClient(new System.Net.Http.HttpClient());
+
       Link link = new Link("http://127.0.0.1:30001");
       server = new HttpPeerRPCServer(link, 10000);
       server.AddRequestHandler((req, res) =>
