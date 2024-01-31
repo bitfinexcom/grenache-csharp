@@ -1,44 +1,41 @@
-using System.Text;
 using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Grenache.Utils
 {
   public static class HttpUtil
   {
-    private static readonly HttpClient client = new HttpClient(); // shared between all instances
+    private static HttpClient client;
 
-    public static HttpClient GetClient { get => client; }
-
-    public static async Task<string> PostRequest<T>(string url, T req)
+    public static void SetClient(HttpClient httpClient)
     {
-      var json = JsonConvert.SerializeObject(req);
-      var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-      var res = await PostRequest(url, (HttpContent)content);
-      return res;
+      client = httpClient;
     }
 
-    public static async Task<string> PostRequest<T>(string url, T req, IDictionary<string, string> headers)
+    public static async Task<TRes> PostRequestAsync<TReq, TRes>(string url, TReq req, IDictionary<string, string> headers = null)
     {
-      var json = JsonConvert.SerializeObject(req);
-      var content = new StringContent(json, Encoding.UTF8, "application/json");
-      foreach (var kv in headers)
-        content.Headers.Add(kv.Key, kv.Value);
+      var request = new HttpRequestMessage(HttpMethod.Post, url)
+      {
+        Content = JsonContent.Create(req)
+      };
 
-      var res = await PostRequest(url, (HttpContent)content);
-      return res;
-    }
+      // Add headers if they are provided
+      if (headers != null)
+      {
+        foreach (var header in headers)
+        {
+          request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+        }
+      }
 
-    public static async Task<string> PostRequest(string url, HttpContent content)
-    {
-      var res = await client.PostAsync(url, content);
-      res.EnsureSuccessStatusCode();
+      var response = await client.SendAsync(request);
+      response.EnsureSuccessStatusCode();
 
-      var data = await res.Content.ReadAsStringAsync();
-      return data;
+      var rawRes = await response.Content.ReadAsStringAsync();
+      return JsonSerializer.Deserialize<TRes>(rawRes);
     }
   }
 }

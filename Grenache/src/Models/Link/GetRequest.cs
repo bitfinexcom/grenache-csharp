@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Grenache.Models.Link
 {
   public class GetRequest : RequestBase
   {
-    [JsonProperty("data")]
+    [JsonPropertyName("data")]
     public string Data { get; set; }
   }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Grenache.Utils;
 using Grenache.Models.PeerRPC;
 
@@ -18,11 +18,13 @@ namespace Grenache
     protected override async Task<RpcClientResponse> Send(string endpoint, object[] req)
     {
       var url = $"{(IsSecure ? "https" : "http")}://{endpoint}";
-      var headers = new Dictionary<string, string>();
-      headers.Add("_gr", JsonConvert.SerializeObject(new object[] { req[0], req[1] })); // [rid, service]
-      var json = await HttpUtil.PostRequest<object[]>(url, req, headers);
+      var headers = new Dictionary<string, string>
+      {
+        ["_gr"] = JsonSerializer.Serialize(new object[] { req[0], req[1] }) // [rid, service]
+      };
 
-      var res = JsonConvert.DeserializeObject<object[]>(json);
+      var json = await HttpUtil.PostRequestAsync<object[], string>(url, req, headers);
+      var res = JsonSerializer.Deserialize<object[]>(json);
       return RpcClientResponse.FromArray(res);
     }
   }

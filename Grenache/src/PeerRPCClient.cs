@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Grenache.Models.PeerRPC;
 
 namespace Grenache
@@ -70,7 +70,7 @@ namespace Grenache
 
     public static T ParseRpcResponseData<T>(RpcClientResponse response)
     {
-      return JsonConvert.DeserializeObject<T>(response.Data);
+      return JsonSerializer.Deserialize<T>(response.Data);
     }
 
     protected abstract Task<RpcClientResponse> Send(string endpoint, Object[] req);

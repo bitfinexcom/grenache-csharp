@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Grenache.Utils;
 using Grenache.Models.Link;
+using System.Text.Json;
 
 namespace Grenache
 {
@@ -17,36 +17,32 @@ namespace Grenache
     public async Task<string[]> Lookup(string service)
     {
       var req = new LookupRequest { Data = service };
-      var res = await HttpUtil.PostRequest($"{Grape}/lookup", req);
-      return JsonConvert.DeserializeObject<string[]>(res);
+      return await HttpUtil.PostRequestAsync<LookupRequest, string[]>($"{Grape}/lookup", req);
     }
 
     public async Task<bool> Announce(string service, int port)
     {
       var req = new AnnounceRequest { Service = service, Port = port };
-      var res = await HttpUtil.PostRequest($"{Grape}/announce", req);
-      return JsonConvert.DeserializeObject<int>(res) == 1;
+      int response = await HttpUtil.PostRequestAsync<AnnounceRequest, int>($"{Grape}/announce", req);
+      return response == 1;
     }
 
     public async Task<string> Put(object value)
     {
-      string serialized = JsonConvert.SerializeObject(value);
-      var res = await Put(serialized);
-      return res;
+      var req = new PutRequest { Data = new PutRequestData { Value = JsonSerializer.Serialize(value) } };
+      return await HttpUtil.PostRequestAsync<PutRequest, string>($"{Grape}/put", req);
     }
 
     public async Task<string> Put(string value)
     {
       var req = new PutRequest { Data = new PutRequestData { Value = value } };
-      var res = await HttpUtil.PostRequest($"{Grape}/put", req);
-      return JsonConvert.DeserializeObject<string>(res);
+      return await HttpUtil.PostRequestAsync<PutRequest, string>($"{Grape}/put", req);
     }
 
     public async Task<GetResponse> Get(string hash)
     {
       var req = new GetRequest { Data = hash };
-      var res = await HttpUtil.PostRequest($"{Grape}/get", req);
-      return JsonConvert.DeserializeObject<GetResponse>(res);
+      return await HttpUtil.PostRequestAsync<GetRequest, GetResponse>($"{Grape}/get", req);
     }
   }
 }

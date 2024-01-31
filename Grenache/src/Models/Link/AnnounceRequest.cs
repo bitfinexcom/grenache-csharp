@@ -1,42 +1,37 @@
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Grenache.Models.Link
 {
-  public class AnnounceRequestConverter : JsonConverter
+  public class AnnounceRequestConverter : JsonConverter<AnnounceRequest>
   {
-    public override bool CanConvert(Type objectType)
+    public override AnnounceRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-      return (objectType == typeof(AnnounceRequest));
-    }
+      using JsonDocument doc = JsonDocument.ParseValue(ref reader);
+      JsonElement root = doc.RootElement;
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-    {
-      JObject root = JObject.Load(reader);
-
-      AnnounceRequest req = new AnnounceRequest();
-      req.RId = Guid.Parse((string)root["rid"]);
-      req.Service = (string)root["data"][0];
-      req.Port = (int)root["data"][1];
+      var req = new AnnounceRequest
+      {
+        RId = Guid.Parse(root.GetProperty("rid").GetString()),
+        Service = root.GetProperty("data")[0].GetString(),
+        Port = root.GetProperty("data")[1].GetInt32()
+      };
 
       return req;
     }
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void Write(Utf8JsonWriter writer, AnnounceRequest value, JsonSerializerOptions options)
     {
-      AnnounceRequest req = (AnnounceRequest)value;
+      writer.WriteStartObject();
+      writer.WriteString("rid", value.RId.ToString());
 
-      JArray data = new JArray();
-      data.Add(req.Service);
-      data.Add(req.Port);
+      writer.WriteStartArray("data");
+      writer.WriteStringValue(value.Service);
+      writer.WriteNumberValue(value.Port);
+      writer.WriteEndArray();
 
-      JObject root = new JObject(
-        new JProperty("rid", req.RId),
-        new JProperty("data", data)
-      );
-
-      root.WriteTo(writer);
+      writer.WriteEndObject();
     }
   }
 

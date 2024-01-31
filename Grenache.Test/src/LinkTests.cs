@@ -1,6 +1,6 @@
-using System;
 using Xunit;
-using Grenache;
+using Grenache.Utils;
+using System.Net.Http;
 
 namespace Grenache.Test
 {
@@ -10,6 +10,7 @@ namespace Grenache.Test
 
     public LinkTests()
     {
+      HttpUtil.SetClient(new HttpClient());
       link = new Link("http://127.0.0.1:30005");
     }
 

@@ -1,11 +1,11 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Grenache.Models.Link
 {
   public class RequestBase
   {
-    [JsonProperty("rid")]
+    [JsonPropertyName("rid")]
     public Guid RId { get; set; } = Guid.NewGuid();
   }
 }

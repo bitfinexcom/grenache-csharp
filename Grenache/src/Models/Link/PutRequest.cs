@@ -1,16 +1,16 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Grenache.Models.Link
 {
   public class PutRequest : RequestBase
   {
-    [JsonProperty("data")]
+    [JsonPropertyName("data")]
     public PutRequestData Data { get; set; }
   }
 
   public class PutRequestData
   {
-    [JsonProperty("v")]
+    [JsonPropertyName("v")]
     public string Value { get; set; }
   }
 }

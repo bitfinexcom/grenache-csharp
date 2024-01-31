@@ -1,14 +1,16 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Grenache.Models.Link
 {
   public class GetResponse
   {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
-    [JsonProperty("token")]
+
+    [JsonPropertyName("token")]
     public string Token { get; set; }
-    [JsonProperty("v")]
+
+    [JsonPropertyName("v")]
     public string Value { get; set; }
   }
 }

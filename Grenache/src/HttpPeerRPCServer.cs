@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Grenache.Models.PeerRPC;
 
 namespace Grenache
@@ -54,7 +54,7 @@ namespace Grenache
       }
     }
 
-    protected void ProcessRequest(HttpListenerContext context)
+    protected async void ProcessRequest(HttpListenerContext context)
     {
       var responseHandler = context.Response;
       try
@@ -64,8 +64,8 @@ namespace Grenache
         using (var body = context.Request.InputStream)
         using (var reader = new StreamReader(body, context.Request.ContentEncoding))
         {
-          var json = reader.ReadToEnd();
-          var req = RpcServerRequest.FromArray(JsonConvert.DeserializeObject<object[]>(json));
+          var json = await reader.ReadToEndAsync();
+          var req = RpcServerRequest.FromArray(JsonSerializer.Deserialize<object[]>(json));
           RequestMap.TryAdd(req.RId.ToString(), responseHandler);
           OnRequestReceived(req);
         }
@@ -74,7 +74,7 @@ namespace Grenache
       {
         responseHandler.StatusCode = 500;
         responseHandler.ContentType = "application/json";
-        var buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e));
+        var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(e));
         responseHandler.ContentLength64 = buffer.Length;
         responseHandler.OutputStream.Write(buffer, 0, buffer.Length);
         responseHandler.Close();
@@ -95,7 +95,7 @@ namespace Grenache
       HttpListenerResponse responseHandler;
       RequestMap.Remove(key, out responseHandler);
 
-      var buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response.ToArray()));
+      var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response.ToArray()));
 
       responseHandler.StatusCode = 200;
       responseHandler.ContentType = "application/json";
