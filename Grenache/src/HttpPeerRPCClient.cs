@@ -23,8 +23,7 @@ namespace Grenache
         ["_gr"] = JsonSerializer.Serialize(new object[] { req[0], req[1] }) // [rid, service]
       };
 
-      var json = await HttpUtil.PostRequestAsync<object[], string>(url, req, headers);
-      var res = JsonSerializer.Deserialize<object[]>(json);
+      var res = await HttpUtil.PostRequestAsync<object[], object[]>(url, req, headers);
       return RpcClientResponse.FromArray(res);
     }
   }
