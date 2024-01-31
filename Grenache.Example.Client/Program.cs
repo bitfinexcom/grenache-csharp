@@ -16,8 +16,8 @@ namespace Grenache.Example.Client
     {
       Utils.HttpUtil.SetClient(new System.Net.Http.HttpClient());
 
-      Link link = new Link("http://127.0.0.1:30001");
-      HttpPeerRPCClient client = new HttpPeerRPCClient(link);
+      Link link = new("http://127.0.0.1:30001");
+      HttpPeerRPCClient client = new(link);
 
       Console.WriteLine("Request: rpc_ping hello");
       var rpcRes = await client.Request("rpc_ping", "hello");

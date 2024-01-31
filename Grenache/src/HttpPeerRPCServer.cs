@@ -92,15 +92,14 @@ namespace Grenache
       var key = response.RId.ToString();
       if (!RequestMap.ContainsKey(key)) return false;
 
-      HttpListenerResponse responseHandler;
-      RequestMap.Remove(key, out responseHandler);
+      RequestMap.Remove(key, out HttpListenerResponse responseHandler);
 
       var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response.ToArray()));
 
       responseHandler.StatusCode = 200;
       responseHandler.ContentType = "application/json";
       responseHandler.ContentLength64 = buffer.Length;
-      await responseHandler.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+      await responseHandler.OutputStream.WriteAsync(buffer);
 
       responseHandler.Close();
       return true;

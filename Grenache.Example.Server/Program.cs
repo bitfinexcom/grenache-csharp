@@ -11,7 +11,7 @@ namespace Grenache.Example.Server
     {
       Utils.HttpUtil.SetClient(new System.Net.Http.HttpClient());
 
-      Link link = new Link("http://127.0.0.1:30001");
+      Link link = new("http://127.0.0.1:30001");
       server = new HttpPeerRPCServer(link, 10000);
       server.AddRequestHandler((req, res) =>
       {

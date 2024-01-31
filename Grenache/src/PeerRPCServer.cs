@@ -31,15 +31,15 @@ namespace Grenache
 
     public async Task<bool> Listen(string service, int port)
     {
-      this.Service = service;
-      this.Port = port;
+      Service = service;
+      Port = port;
 
       var started = await StartServer();
       if (!started) return false;
 
       AnnounceInterval = new Timer(async (_) =>
       {
-        await Link.Announce(this.Service, this.Port);
+        await Link.Announce(Service, Port);
       }, null, 0, AnnouncePeriod);
 
       return true;
@@ -59,18 +59,18 @@ namespace Grenache
     public void AddRequestHandler(RpcRequestHandler handler)
     {
       RequestReceived += handler;
-      this.RequestHandler.Add(handler);
+      RequestHandler.Add(handler);
     }
 
     public void RemoveRequestHandler(RpcRequestHandler handler)
     {
       RequestReceived -= handler;
-      this.RequestHandler.Remove(handler);
+      RequestHandler.Remove(handler);
     }
 
     protected virtual void OnRequestReceived(RpcServerRequest request)
     {
-      RequestReceived?.Invoke(request, this.SendResponse);
+      RequestReceived?.Invoke(request, SendResponse);
     }
 
     protected abstract Task<bool> StartServer();
