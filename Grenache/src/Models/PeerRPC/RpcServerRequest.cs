@@ -14,7 +14,7 @@ namespace Grenache.Models.PeerRPC
       {
         RId = Guid.Parse(arr[0].ToString()),
         Service = arr[1].ToString(),
-        Payload = arr[2] != null ? arr[2].ToString() : null
+        Payload = arr[2]?.ToString()
       };
     }
   }

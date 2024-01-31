@@ -13,8 +13,8 @@ namespace Grenache.Models.PeerRPC
       return new RpcClientResponse
       {
         RId = Guid.Parse(arr[0].ToString()),
-        Error = arr[1] != null ? arr[1].ToString() : null,
-        Data = arr[2] != null ? arr[2].ToString() : null
+        Error = arr[1]?.ToString(),
+        Data = arr[2]?.ToString()
       };
     }
   }
