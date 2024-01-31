@@ -73,6 +73,6 @@ namespace Grenache
       return JsonSerializer.Deserialize<T>(response.Data);
     }
 
-    protected abstract Task<RpcClientResponse> Send(string endpoint, Object[] req);
+    protected abstract Task<RpcClientResponse> Send(string endpoint, object[] req);
   }
 }
