@@ -11,16 +11,16 @@ namespace Grenache
 
   public abstract class PeerRPCServer
   {
-    protected Link Link { get; set; }
+    protected Link Link { get; }
     public string Service { get; protected set; }
     public int Port { get; protected set; }
 
     protected event RpcRequestHandler RequestReceived;
-    protected List<RpcRequestHandler> RequestHandler { get; set; }
+    protected List<RpcRequestHandler> RequestHandler { get; }
     public Task ListenerTask { get; protected set; }
 
     protected Timer AnnounceInterval { get; set; }
-    protected int AnnouncePeriod { get; set; }
+    protected int AnnouncePeriod { get; }
 
     public PeerRPCServer(Link link, int announcePeriod = 120 * 1000)
     {
@@ -37,7 +37,7 @@ namespace Grenache
       var started = await StartServer();
       if (!started) return false;
 
-      AnnounceInterval = new Timer(async (_) =>
+      AnnounceInterval = new Timer(async _ =>
       {
         await Link.Announce(Service, Port);
       }, null, 0, AnnouncePeriod);

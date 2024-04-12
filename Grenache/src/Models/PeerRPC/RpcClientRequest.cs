@@ -10,7 +10,7 @@ namespace Grenache.Models.PeerRPC
 
     public object[] ToArray()
     {
-      return new object[] { RId, Service, Payload };
+      return [RId, Service, Payload];
     }
   }
 }

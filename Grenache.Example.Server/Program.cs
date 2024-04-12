@@ -6,24 +6,24 @@ namespace Grenache.Example.Server
 {
   class Program
   {
-    static HttpPeerRPCServer server;
+    static HttpPeerRPCServer _server;
     static async Task Main(string[] args)
     {
       Utils.HttpUtil.SetClient(new System.Net.Http.HttpClient());
 
       Link link = new("http://127.0.0.1:30001");
-      server = new HttpPeerRPCServer(link, 10000);
-      server.AddRequestHandler((req, res) =>
+      _server = new HttpPeerRPCServer(link, 10000);
+      _server.AddRequestHandler((req, res) =>
       {
         res.Invoke(new RpcServerResponse { RId = req.RId, Data = req.Payload });
       });
-      var started = await server.Listen("rpc_ping", 7070);
+      var started = await _server.Listen("rpc_ping", 7070);
       if (!started) throw new Exception("Couldn't start the server!");
       Console.WriteLine("Server started!");
 
       CloseHandler();
 
-      await server.ListenerTask; // used to keep the app always running
+      await _server.ListenerTask; // used to keep the app always running
     }
 
     static void CloseHandler()
@@ -32,7 +32,7 @@ namespace Grenache.Example.Server
       {
         Console.WriteLine("Press any key to close the server");
         Console.Read();
-        await server.Close();
+        await _server.Close();
       });
     }
   }

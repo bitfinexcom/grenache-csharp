@@ -5,14 +5,9 @@ using System.Text.Json;
 
 namespace Grenache
 {
-  public class Link
+  public class Link(string grape)
   {
-    protected string Grape { get; set; }
-
-    public Link(string grape)
-    {
-      Grape = grape;
-    }
+    protected string Grape { get; } = grape;
 
     public async Task<string[]> Lookup(string service)
     {
@@ -23,7 +18,7 @@ namespace Grenache
     public async Task<bool> Announce(string service, int port)
     {
       var req = new AnnounceRequest { Service = service, Port = port };
-      int response = await HttpUtil.PostRequestAsync<AnnounceRequest, int>($"{Grape}/announce", req);
+      var response = await HttpUtil.PostRequestAsync<AnnounceRequest, int>($"{Grape}/announce", req);
       return response == 1;
     }
 
