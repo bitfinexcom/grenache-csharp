@@ -43,32 +43,27 @@ namespace Grenache
         try
         {
           var context = await Listener.GetContextAsync();
-          lock (Listener)
-          {
-            if (Listener.IsListening) ProcessRequest(context);
-          }
+          Task.Run(() => ProcessRequest(context));
         }
         catch
-        {
+        { 
         }
       }
     }
 
-    protected async void ProcessRequest(HttpListenerContext context)
+    protected async Task ProcessRequest(HttpListenerContext context)
     {
       var responseHandler = context.Response;
       try
       {
         if (context.Request.HttpMethod.ToUpper() != "POST") throw new Exception("Invalid HTTP Method");
 
-        using (var body = context.Request.InputStream)
-        using (var reader = new StreamReader(body, context.Request.ContentEncoding))
-        {
-          var json = await reader.ReadToEndAsync();
-          var req = RpcServerRequest.FromArray(JsonSerializer.Deserialize<object[]>(json));
-          RequestMap.TryAdd(req.RId.ToString(), responseHandler);
-          OnRequestReceived(req);
-        }
+        await using var body = context.Request.InputStream;
+        using var reader = new StreamReader(body, context.Request.ContentEncoding);
+        var json = await reader.ReadToEndAsync();
+        var req = RpcServerRequest.FromArray(JsonSerializer.Deserialize<object[]>(json));
+        RequestMap.TryAdd(req.RId.ToString(), responseHandler);
+        OnRequestReceived(req);
       }
       catch (Exception e)
       {
