@@ -5,13 +5,13 @@
     <RootNamespace>Grenache</RootNamespace>
     <PackageId>Grenache</PackageId>
     <Version>0.5.0</Version>
-    <Authors>vigan.abd</Authors>
+    <Authors>prdn, vigan.abd, kamil518</Authors>
     <Company>Bitfinex</Company>
     <Title>Grenache.NET</Title>
     <PackageTags>Greenache</PackageTags>
-    <PackageDescription>This package provides Grenache microservice implementation for .NETCORE</PackageDescription>
-    <Description>This package provides Grenache microservice implementation for .NETCORE</Description>
-    <Summary>This package provides Grenache microservice implementation for .NETCORE</Summary>
+    <PackageDescription>This package provides Grenache microservice implementation for .NET</PackageDescription>
+    <Description>This package provides Grenache microservice implementation for .NET</Description>
+    <Summary>This package provides Grenache microservice implementation for .NET</Summary>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/bitfinexcom/grenache-csharp.git </RepositoryUrl>
     <PackageIcon>packageIcon.png</PackageIcon>

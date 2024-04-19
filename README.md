@@ -16,12 +16,12 @@ Internally, Grenache uses Distributed Hash Tables (DHT, known from Bittorrent) f
 As a first step you need to add github auth to nuget. First go to https://github.com/settings/tokens/new and make sure you've checked `read:packages` option. Once you do that go to your project directory and add source for the repo in nuget:
 
 ```bash
-dotnet nuget add source https://nuget.pkg.github.com/bitfinexcom/index.json -n bitfinexcom-github -u <YOUR_USERNAME> -p <YOUR_GENERATED_TOKEN> --store-password-in-clear-text
+dotnet nuget add source https://nuget.pkg.github.com/bitfinexcom/index.json ---name github --username <YOUR_GITHUB_USERNAME> --password <YOUR_GENERATED_TOKEN> --store-password-in-clear-text
 ```
 
 After you've added the repo to your env then you can install the grenache lib by running this cmd:
 ```bash
-dotnet add package Grenache --version <PACKAGE_VER> --source bitfinexcom-github
+dotnet add package Grenache --version <PACKAGE_VER> --source github
 ```
 
 ### Other Requirements
