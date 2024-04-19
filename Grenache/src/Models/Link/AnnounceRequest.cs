@@ -8,12 +8,12 @@ namespace Grenache.Models.Link
   {
     public override AnnounceRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-      using JsonDocument doc = JsonDocument.ParseValue(ref reader);
-      JsonElement root = doc.RootElement;
+      using var doc = JsonDocument.ParseValue(ref reader);
+      var root = doc.RootElement;
 
       var req = new AnnounceRequest
       {
-        RId = Guid.Parse(root.GetProperty("rid").GetString()),
+        RId = Guid.Parse(root.GetProperty("rid").GetString() ?? throw new InvalidOperationException()),
         Service = root.GetProperty("data")[0].GetString(),
         Port = root.GetProperty("data")[1].GetInt32()
       };

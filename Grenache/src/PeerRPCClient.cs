@@ -7,18 +7,11 @@ using Grenache.Models.PeerRPC;
 
 namespace Grenache
 {
-  public abstract class PeerRPCClient
+  public abstract class PeerRPCClient(Link link, long cacheAge = 120 * 1000)
   {
-    protected Link Link { get; set; }
-    protected long CacheAge { get; set; }
-    protected Dictionary<string, LookupValue> Lookups { get; set; }
-
-    public PeerRPCClient(Link link, long cacheAge = 120 * 1000)
-    {
-      Link = link;
-      CacheAge = cacheAge;
-      Lookups = new Dictionary<string, LookupValue>();
-    }
+    protected Link Link { get; } = link;
+    protected long CacheAge { get; } = cacheAge;
+    protected Dictionary<string, LookupValue> Lookups { get; } = new();
 
     public async Task<RpcClientResponse> Request(string service, object payload)
     {
@@ -49,8 +42,8 @@ namespace Grenache
 
     protected async Task<LookupValue> ResolveService(string service)
     {
-      long now = DateTime.Now.Ticks;
-      bool hasKey = Lookups.ContainsKey(service);
+      var now = DateTime.Now.Ticks;
+      var hasKey = Lookups.ContainsKey(service);
       if (!hasKey || now - Lookups[service].LastUpdated > CacheAge)
       {
         var res = await Link.Lookup(service);

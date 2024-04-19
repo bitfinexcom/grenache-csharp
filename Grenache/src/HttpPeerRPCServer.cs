@@ -10,12 +10,10 @@ using Grenache.Models.PeerRPC;
 
 namespace Grenache
 {
-  public class HttpPeerRPCServer : PeerRPCServer
+  public class HttpPeerRPCServer(Link link, int announcePeriod = 120 * 1000) : PeerRPCServer(link, announcePeriod)
   {
     protected HttpListener Listener { get; set; }
     protected ConcurrentDictionary<string, HttpListenerResponse> RequestMap { get; set; }
-
-    public HttpPeerRPCServer(Link link, int announcePeriod = 120 * 1000) : base(link, announcePeriod) { }
 
     protected override Task<bool> StartServer()
     {
@@ -43,40 +41,41 @@ namespace Grenache
         try
         {
           var context = await Listener.GetContextAsync();
-          lock (Listener)
-          {
-            if (Listener.IsListening) ProcessRequest(context);
-          }
+          Task.Run(() => ProcessRequest(context));
         }
         catch
-        {
+        { 
         }
       }
     }
 
-    protected async void ProcessRequest(HttpListenerContext context)
+    protected async Task ProcessRequest(HttpListenerContext context)
     {
       var responseHandler = context.Response;
+      var requestId = string.Empty;
       try
       {
         if (context.Request.HttpMethod.ToUpper() != "POST") throw new Exception("Invalid HTTP Method");
 
-        using (var body = context.Request.InputStream)
-        using (var reader = new StreamReader(body, context.Request.ContentEncoding))
-        {
-          var json = await reader.ReadToEndAsync();
-          var req = RpcServerRequest.FromArray(JsonSerializer.Deserialize<object[]>(json));
-          RequestMap.TryAdd(req.RId.ToString(), responseHandler);
-          OnRequestReceived(req);
-        }
+        await using var body = context.Request.InputStream;
+        using var reader = new StreamReader(body, context.Request.ContentEncoding);
+        var json = await reader.ReadToEndAsync();
+        var req = RpcServerRequest.FromArray(JsonSerializer.Deserialize<object[]>(json));
+        requestId = req.RId.ToString();
+        RequestMap.TryAdd(requestId, responseHandler);
+        OnRequestReceived(req);
       }
       catch (Exception e)
       {
+        if (!string.IsNullOrWhiteSpace(requestId) )
+        {
+          RequestMap.TryRemove(requestId, out _);
+        }
         responseHandler.StatusCode = 500;
         responseHandler.ContentType = "application/json";
         var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(e));
         responseHandler.ContentLength64 = buffer.Length;
-        responseHandler.OutputStream.Write(buffer, 0, buffer.Length);
+        await responseHandler.OutputStream.WriteAsync(buffer);
         responseHandler.Close();
       }
     }
@@ -92,7 +91,7 @@ namespace Grenache
       var key = response.RId.ToString();
       if (!RequestMap.ContainsKey(key)) return false;
 
-      RequestMap.Remove(key, out HttpListenerResponse responseHandler);
+      RequestMap.Remove(key, out var responseHandler);
 
       var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response.ToArray()));
 

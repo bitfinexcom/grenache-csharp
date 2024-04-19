@@ -8,11 +8,11 @@ namespace Grenache.Utils
 {
   public static class HttpUtil
   {
-    private static HttpClient client;
+    private static HttpClient _client;
 
     public static void SetClient(HttpClient httpClient)
     {
-      client = httpClient;
+      _client = httpClient;
     }
 
     public static async Task<TRes> PostRequestAsync<TReq, TRes>(string url, TReq req, IDictionary<string, string> headers = null)
@@ -31,7 +31,7 @@ namespace Grenache.Utils
         }
       }
 
-      var response = await client.SendAsync(request);
+      var response = await _client.SendAsync(request);
       response.EnsureSuccessStatusCode();
 
       var rawRes = await response.Content.ReadAsStringAsync();
