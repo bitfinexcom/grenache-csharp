@@ -52,6 +52,7 @@ namespace Grenache
     protected async Task ProcessRequest(HttpListenerContext context)
     {
       var responseHandler = context.Response;
+      var requestId = string.Empty;
       try
       {
         if (context.Request.HttpMethod.ToUpper() != "POST") throw new Exception("Invalid HTTP Method");
@@ -60,11 +61,16 @@ namespace Grenache
         using var reader = new StreamReader(body, context.Request.ContentEncoding);
         var json = await reader.ReadToEndAsync();
         var req = RpcServerRequest.FromArray(JsonSerializer.Deserialize<object[]>(json));
-        RequestMap.TryAdd(req.RId.ToString(), responseHandler);
+        requestId = req.RId.ToString();
+        RequestMap.TryAdd(requestId, responseHandler);
         OnRequestReceived(req);
       }
       catch (Exception e)
       {
+        if (!string.IsNullOrWhiteSpace(requestId) )
+        {
+          RequestMap.TryRemove(requestId, out _);
+        }
         responseHandler.StatusCode = 500;
         responseHandler.ContentType = "application/json";
         var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(e));
