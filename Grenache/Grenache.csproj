@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Grenache</RootNamespace>
+    <PackageId>Grenache</PackageId>
+    <Version>0.5.0</Version>
+    <Authors>prdn, vigan.abd, kamil518</Authors>
+    <Company>Bitfinex</Company>
+    <Title>Grenache.NET</Title>
+    <PackageTags>Greenache</PackageTags>
+    <PackageDescription>This package provides Grenache microservice implementation for .NET</PackageDescription>
+    <Description>This package provides Grenache microservice implementation for .NET</Description>
+    <Summary>This package provides Grenache microservice implementation for .NET</Summary>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/bitfinexcom/grenache-csharp.git </RepositoryUrl>
+    <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="**/*.orig" />
+    <None Include="../LICENSE" Pack="true" PackagePath="" />
+    <None Include="../packageIcon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,10 @@
+{
+  "name": "grenache.test",
+  "version": "1.0.0",
+  "description": "grenache csharp unit tests",
+  "author": "vigan.abd",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "pm2": "^5.3.1"
+  }
+}

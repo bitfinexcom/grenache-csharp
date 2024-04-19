@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "grape-1",
+      "script": "grape --dp 20005 --aph 30005 --bn '127.0.0.1:20006'"
+    },
+    {
+      "name": "grape-2",
+      "script": "grape --dp 20006 --aph 40006 --bn '127.0.0.1:20005'"
+    }
+  ]
+}
