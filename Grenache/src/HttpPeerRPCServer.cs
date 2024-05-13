@@ -55,7 +55,7 @@ namespace Grenache
       var requestId = string.Empty;
       try
       {
-        if (context.Request.HttpMethod.ToUpper() != "POST") throw new Exception("Invalid HTTP Method");
+        if (context.Request.HttpMethod.ToUpper() != "POST") throw new Exception("ERR_INVALID_HTTP_METHOD");
 
         await using var body = context.Request.InputStream;
         using var reader = new StreamReader(body, context.Request.ContentEncoding);

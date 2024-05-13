@@ -8,6 +8,7 @@ namespace Grenache.Example.Server
   class Program
   {
     static HttpPeerRPCServer _server;
+
     static async Task Main(string[] args)
     {
       HttpUtil.SetClient(new System.Net.Http.HttpClient());
@@ -23,7 +24,7 @@ namespace Grenache.Example.Server
         res.Invoke(new RpcServerResponse { RId = req.RId, Data = data });
       });
       var started = await _server.Listen("rpc_ping", 7070);
-      if (!started) throw new Exception("Couldn't start the server!");
+      if (!started) throw new Exception("ERR_SERVER_STARTUP_FAILURE");
       Console.WriteLine("Server started!");
 
       CloseHandler();
