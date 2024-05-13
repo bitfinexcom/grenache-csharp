@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Grenache.Models.PeerRPC;
+using Grenache.Utils;
 
 namespace Grenache.Example.Server
 {
@@ -9,13 +10,17 @@ namespace Grenache.Example.Server
     static HttpPeerRPCServer _server;
     static async Task Main(string[] args)
     {
-      Utils.HttpUtil.SetClient(new System.Net.Http.HttpClient());
+      HttpUtil.SetClient(new System.Net.Http.HttpClient());
 
       Link link = new("http://127.0.0.1:30001");
+      var pingService = new RpcPingService();
+      var actionHandler = new RpcActionHandler(pingService.GetType().Assembly);
       _server = new HttpPeerRPCServer(link, 10000);
       _server.AddRequestHandler((req, res) =>
       {
-        res.Invoke(new RpcServerResponse { RId = req.RId, Data = req.Payload });
+        var resultDelegate = actionHandler.HandleAction(req.Payload);
+        var data = resultDelegate(pingService);
+        res.Invoke(new RpcServerResponse { RId = req.RId, Data = data });
       });
       var started = await _server.Listen("rpc_ping", 7070);
       if (!started) throw new Exception("Couldn't start the server!");

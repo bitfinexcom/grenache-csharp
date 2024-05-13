@@ -42,12 +42,22 @@ grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'
 
 #### RPC Server / Client
 
-This RPC Server example announces a service called `rpc_test`
-on the overlay network. When a request from a client is received,
-it replies with `world`. It receives the payload `hello` from the
-client.
+This RPC Server example introduces a service called `RpcPingService` within the overlay network. The server listens for a specific method indicated in the payload of the incoming requests. Here is how the interaction unfolds:
 
-The client sends `hello` and receives `world` from the server.
+- **Client Action:** Sends a request with payload `hello`.
+- **Server Response:** Responds with `world`.
+
+The server handles the incoming requests in the `RpcPingService` class by identifying the method specified in the request body using the following template:
+
+```csharp
+var rpcRes = await client.Request("rpc_ping",
+    """
+    {
+        "action": "Greet",
+        "args": [{ "message": "hello" }]
+    }
+    """);
+
 
 Internally the DHT is asked for the IP of the server and then the
 request is done as Peer-to-Peer request via websockets.
@@ -66,19 +76,23 @@ using Grenache;
 using Grenache.Models.PeerRPC;
 ...
 
-Link link = new Link("http://127.0.0.1:30001");
-server = new HttpPeerRPCServer(link, 10000);
-
-server.AddRequestHandler((req, res) =>
+Link link = new("http://127.0.0.1:30001");
+var pingService = new RpcPingService();
+var actionHandler = new RpcActionHandler(pingService.GetType().Assembly);
+_server = new HttpPeerRPCServer(link, 10000);
+_server.AddRequestHandler((req, res) =>
 {
-  Console.WriteLine("Payload: " + req.Payload);
-  res.Invoke(new RpcServerResponse { RId = req.RId, Data = "world" });
+  var resultDelegate = actionHandler.HandleAction(req.Payload);
+  var data = resultDelegate(pingService);
+  res.Invoke(new RpcServerResponse { RId = req.RId, Data = data });
 });
-
-var started = await server.Listen("rpc_test", 7070);
+var started = await _server.Listen("rpc_ping", 7070);
 if (!started) throw new Exception("Couldn't start the server!");
+Console.WriteLine("Server started!");
 
-await server.ListenerTask; // used to keep the app always running
+CloseHandler();
+
+await _server.ListenerTask; // used to keep the app always running
 
 ```
 
@@ -88,12 +102,41 @@ await server.ListenerTask; // used to keep the app always running
 using Grenache;
 ...
 
-Link link = new Link("http://127.0.0.1:30001");
-HttpPeerRPCClient client = new HttpPeerRPCClient(link);
+Link link = new("http://127.0.0.1:30001");
+HttpPeerRPCClient client = new(link);
 
-Console.WriteLine("Request: rpc_test hello");
-var rpcRes = await client.Request("rpc_test", "hello");
+Console.WriteLine("Request: rpc_ping hello");
+var rpcRes = await client.Request("rpc_ping",
+    """
+    {
+        "action": "Greet",
+        "args": [{ "message": "hello" }]
+    }
+    """);
 Console.WriteLine("Response: " + rpcRes.Data);
+
+Console.WriteLine("Request: rpc_ping Action = \"Point\", Args = [new {point = new { x = \"10\" }}] Multiplies by 5");
+rpcRes = await client.Request("rpc_ping", new RpcRequest
+{
+    Action = "Point", 
+    Args = [new {point = new { x = 10 }}]
+});
+Console.WriteLine("Response: " + rpcRes.Data);
+
+Console.WriteLine("Request: rpc_ping Action = \"Point2D\", Args = [new {point = new Point2D { X = \"5\", Y = \"10\" }}] Multiplies by 3");
+rpcRes = await client.Request("rpc_ping", new RpcRequest
+{
+    Action = "Point2D",
+    Args = [ new {point = new Point2D { X = 5, Y = 10 }}]
+});
+Console.WriteLine("Response: " + rpcRes.Data);
+
+var point = PeerRPCClient.ParseRpcResponseData<Point2D>(rpcRes);
+Console.WriteLine($"Parsed object: x: {point.X}, y: {point.Y}");
+
+Console.WriteLine("Map Request: rpc_ping test map");
+var mapRpcRes = await client.Map("rpc_ping", "test map");
+Console.WriteLine("Mapped Response: " + string.Join(",", mapRpcRes.Select(x => x.Data)));
 
 ```
 
