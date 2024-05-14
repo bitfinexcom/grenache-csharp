@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Grenache.Utils;
 using Xunit;
+using System.Text.Json;
 
 namespace Grenache.Test;
 
@@ -82,7 +83,7 @@ public class RpcActionHandlerTests
     const string json = "Invalid JSON Format";
 
     // Assert
-    Assert.Throws<Newtonsoft.Json.JsonReaderException>(() => _handler.HandleAction(json));
+    Assert.ThrowsAny<JsonException>(() => _handler.HandleAction(json));
   }
 }
 
@@ -95,7 +96,7 @@ public class TestClass
 
   public string Greet(string message)
   {
-    if (message.Equals("hello", System.StringComparison.CurrentCultureIgnoreCase))
+    if (message.Equals("hello", StringComparison.CurrentCultureIgnoreCase))
       return "world";
     return string.Empty;
   }
