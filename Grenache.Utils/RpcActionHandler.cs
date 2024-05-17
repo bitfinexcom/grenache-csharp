@@ -23,12 +23,6 @@ public class RpcActionHandler(Assembly targetAssembly)
       throw new ArgumentException("ERR_JSON_ARGS_REQUIRED: 'args' property is required in the JSON object");
     }
 
-    // if (!jsonObject.TryGetValue("args", StringComparison.OrdinalIgnoreCase, out JToken argsToken))
-    // {
-    //   throw new ArgumentException("ERR_JSON_ARGS_REQUIRED: 'args' property is required in the JSON object");
-    // }
-
-
     var theMethod = FindMethodInAssembly(action, argsElement.Value);
 
     if (theMethod == null)
