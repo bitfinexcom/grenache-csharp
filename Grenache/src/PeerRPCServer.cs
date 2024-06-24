@@ -1,15 +1,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Grenache.Interfaces;
 using Grenache.Models.PeerRPC;
 
 namespace Grenache
 {
   public delegate Task<bool> RpcResponseHandler(RpcServerResponse response);
+
   public delegate void RpcRequestHandler(RpcServerRequest request, RpcResponseHandler response);
 
 
-  public abstract class PeerRPCServer
+  public abstract class PeerRPCServer : IRPCServer
   {
     protected Link Link { get; }
     public string Service { get; protected set; }
@@ -37,10 +39,7 @@ namespace Grenache
       var started = await StartServer();
       if (!started) return false;
 
-      AnnounceInterval = new Timer(async _ =>
-      {
-        await Link.Announce(Service, Port);
-      }, null, 0, AnnouncePeriod);
+      AnnounceInterval = new Timer(async _ => { await Link.Announce(Service, Port); }, null, 0, AnnouncePeriod);
 
       return true;
     }
@@ -53,6 +52,7 @@ namespace Grenache
       {
         RequestReceived -= handler;
       }
+
       RequestHandler.Clear();
     }
 

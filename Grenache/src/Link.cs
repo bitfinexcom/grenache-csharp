@@ -2,10 +2,11 @@
 using Grenache.Utils;
 using Grenache.Models.Link;
 using System.Text.Json;
+using Grenache.Interfaces;
 
 namespace Grenache
 {
-  public class Link(string grape)
+  public class Link(string grape): ILink
   {
     protected string Grape { get; } = grape;
 
