@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Grenache.Interfaces;
 
 namespace Grenache.Example.Client
 {
@@ -53,7 +54,7 @@ namespace Grenache.Example.Client
       });
       Console.WriteLine("Response: " + rpcRes.Data);
 
-      var point = PeerRPCClient.ParseRpcResponseData<Point2D>(rpcRes);
+      var point = IRPCClient.ParseRpcResponseData<Point2D>(rpcRes);
       Console.WriteLine($"Parsed object: x: {point.X}, y: {point.Y}");
 
       Console.WriteLine("Map Request: rpc_ping test map");

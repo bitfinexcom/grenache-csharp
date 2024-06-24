@@ -3,11 +3,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.Json;
+using Grenache.Interfaces;
 using Grenache.Models.PeerRPC;
 
 namespace Grenache
 {
-  public abstract class PeerRPCClient(Link link, long cacheAge = 120 * 1000)
+  public abstract class PeerRPCClient(Link link, long cacheAge = 120 * 1000) : IRPCClient
   {
     protected Link Link { get; } = link;
     protected long CacheAge { get; } = cacheAge;
@@ -59,11 +60,6 @@ namespace Grenache
       }
 
       return Lookups[service];
-    }
-
-    public static T ParseRpcResponseData<T>(RpcClientResponse response)
-    {
-      return JsonSerializer.Deserialize<T>(response.Data);
     }
 
     protected abstract Task<RpcClientResponse> Send(string endpoint, object[] req);
