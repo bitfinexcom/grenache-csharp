@@ -1,3 +1,6 @@
+0.8.0
+- Adds RpcRequest model
+
 0.7.0
 - Exposed RPC Client, RPC Server and Link through interfaces
 

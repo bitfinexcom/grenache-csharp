@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Grenache</RootNamespace>
     <PackageId>Grenache</PackageId>
-    <Version>0.7.0</Version>
+    <Version>0.8.0</Version>
     <Authors>prdn, vigan.abd, kamil518</Authors>
     <Company>Bitfinex</Company>
     <Title>Grenache.NET</Title>
