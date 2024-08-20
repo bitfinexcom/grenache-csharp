@@ -1,3 +1,6 @@
+0.9.0
+- Adds fix for concurrency 
+
 0.8.0
 - Adds RpcRequest model
 

@@ -1,8 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text.Json;
 using Grenache.Interfaces;
 using Grenache.Models.PeerRPC;
 
@@ -12,7 +11,7 @@ namespace Grenache
   {
     protected Link Link { get; } = link;
     protected long CacheAge { get; } = cacheAge;
-    protected Dictionary<string, LookupValue> Lookups { get; } = new();
+    protected ConcurrentDictionary<string, LookupValue> Lookups { get; } = new();
 
     public async Task<RpcClientResponse> Request(string service, object payload)
     {
@@ -45,18 +44,12 @@ namespace Grenache
     {
       var now = DateTime.Now.Ticks;
       var hasKey = Lookups.ContainsKey(service);
-      if (!hasKey || now - Lookups[service].LastUpdated > CacheAge)
+
+      if (!Lookups.TryGetValue(service, out var lookupValue) || now - lookupValue.LastUpdated > CacheAge)
       {
         var res = await Link.Lookup(service);
-        if (hasKey)
-        {
-          Lookups[service].Endpoints = res;
-          Lookups[service].LastUpdated = now;
-        }
-        else
-        {
-          Lookups.Add(service, new LookupValue { LastUpdated = now, Endpoints = res });
-        }
+        var newValue = new LookupValue { LastUpdated = now, Endpoints = res };
+        Lookups.AddOrUpdate(service, newValue, (key, oldValue) => newValue);
       }
 
       return Lookups[service];
