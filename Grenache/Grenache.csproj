@@ -26,7 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Grenache.Utils\Grenache.Utils.csproj" />
+    <ProjectReference Include="../Grenache.Utils/Grenache.Utils.csproj">
+      <Pack>true</Pack>
+      <IncludeAssets>All</IncludeAssets>
+      <PrivateAssets>None</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>
