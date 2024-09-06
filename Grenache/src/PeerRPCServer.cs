@@ -8,7 +8,7 @@ namespace Grenache
 {
   public delegate Task<bool> RpcResponseHandler(RpcServerResponse response);
 
-  public delegate void RpcRequestHandler(RpcServerRequest request, RpcResponseHandler response);
+  public delegate Task RpcRequestHandler(RpcServerRequest request, RpcResponseHandler response);
 
 
   public abstract class PeerRPCServer : IRPCServer
@@ -68,9 +68,21 @@ namespace Grenache
       RequestHandler.Remove(handler);
     }
 
-    protected virtual void OnRequestReceived(RpcServerRequest request)
+    protected virtual async Task OnRequestReceived(RpcServerRequest request)
     {
-      RequestReceived?.Invoke(request, SendResponse);
+      if (RequestReceived != null)
+      {
+        // Get the list of invocation delegates
+        var invocationList = RequestReceived.GetInvocationList();
+
+        foreach (var handler in invocationList)
+        {
+          
+            // Since the handler is async, you need to await it
+            var rpcHandler = (RpcRequestHandler)handler;
+            await rpcHandler(request, SendResponse);
+        }
+      }
     }
 
     protected abstract Task<bool> StartServer();
