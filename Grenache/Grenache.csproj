@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Grenache</RootNamespace>
     <PackageId>Grenache</PackageId>
-    <Version>0.10.0</Version>
+    <Version>0.11.0</Version>
     <Authors>prdn, vigan.abd, kamil518</Authors>
     <Company>Bitfinex</Company>
     <Title>Grenache.NET</Title>
@@ -23,14 +23,6 @@
     <None Remove="**/*.orig" />
     <None Include="../LICENSE" Pack="true" PackagePath="" />
     <None Include="../packageIcon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Grenache.Utils/Grenache.Utils.csproj">
-      <Pack>true</Pack>
-      <IncludeAssets>All</IncludeAssets>
-      <PrivateAssets>None</PrivateAssets>
-    </ProjectReference>
   </ItemGroup>
 
 </Project>

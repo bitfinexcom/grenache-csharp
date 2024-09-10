@@ -11,6 +11,11 @@ public interface IRPCClient
 
   static T ParseRpcResponseData<T>(RpcClientResponse response)
   {
+    if (typeof(T) == typeof(bool))
+    {
+      return (T)(object)bool.Parse(response.Data);
+    }
+
     return JsonSerializer.Deserialize<T>(response.Data);
   }
 }

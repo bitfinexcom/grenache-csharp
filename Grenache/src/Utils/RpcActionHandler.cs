@@ -1,15 +1,18 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Grenache.Utils;
 
-public class RpcActionHandler(Assembly targetAssembly)
+public class RpcActionHandler(Type type)
 {
-  public Func<object, object> HandleAction(string json)
+  public Func<object, Task<object>> HandleAction(string json)
   {
     var jsonDocument = JsonDocument.Parse(json);
 
-    if (!jsonDocument.RootElement.TryGetProperty("action", out JsonElement actionElement))
+    if (!jsonDocument.RootElement.TryGetProperty("action", out var actionElement))
     {
       throw new ArgumentException("ERR_JSON_ACTION_REQUIRED: 'action' property is required in the JSON object");
     }
@@ -23,7 +26,7 @@ public class RpcActionHandler(Assembly targetAssembly)
       throw new ArgumentException("ERR_JSON_ARGS_REQUIRED: 'args' property is required in the JSON object");
     }
 
-    var theMethod = FindMethodInAssembly(action, argsElement.Value);
+    var theMethod = FindMethodInType(action);
 
     if (theMethod == null)
     {
@@ -32,7 +35,31 @@ public class RpcActionHandler(Assembly targetAssembly)
     }
 
     var methodArgs = PrepareMethodArguments(theMethod, argsElement.Value);
-    return instance => theMethod.Invoke(instance, methodArgs);
+
+    var isAsync = typeof(Task).IsAssignableFrom(theMethod.ReturnType);
+
+    return async instance =>
+    {
+      var result = theMethod.Invoke(instance, methodArgs);
+
+      if (isAsync)
+      {
+        await (Task)result;
+
+        // If the method returns Task<T>, get the result using reflection
+        if (theMethod.ReturnType.IsGenericType && theMethod.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+        {
+          var resultProperty = theMethod.ReturnType.GetProperty("Result");
+          return resultProperty.GetValue(result);
+        }
+
+        return null; // The method is just Task, not Task<T>
+      }
+      else
+      {
+        return result;
+      }
+    };
   }
 
   private static JsonElement? FindElement(JsonElement element, string propertyName)
@@ -41,6 +68,7 @@ public class RpcActionHandler(Assembly targetAssembly)
     {
       throw new ArgumentException("The provided JsonElement is not an array.", nameof(element));
     }
+
     foreach (var property in element.EnumerateObject())
     {
       if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
@@ -51,8 +79,8 @@ public class RpcActionHandler(Assembly targetAssembly)
 
     return null;
   }
-  
-  private static JsonElement? FindPropertyInArray(JsonElement element, string propertyName)
+
+  private static JsonElement? FindPropertyInArray(JsonElement element, int index)
   {
     // Check if the JsonElement is an array
     if (element.ValueKind != JsonValueKind.Array)
@@ -60,54 +88,27 @@ public class RpcActionHandler(Assembly targetAssembly)
       throw new ArgumentException("The provided JsonElement is not an array.", nameof(element));
     }
 
-    // Iterate through each element in the array
-    foreach (JsonElement item in element.EnumerateArray())
+    if (element.GetArrayLength() <= index)
     {
-      // Check if the current item is an object and search for the property
-      if (item.ValueKind == JsonValueKind.Object)
-      {
-        foreach (var property in item.EnumerateObject())
-        {
-          if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
-          {
-            return property.Value;
-          }
-        }
-      }
+      return null;
     }
 
-    // Return null if no matching property is found in any object within the array
-    return null;
+    return element[index];
   }
 
 
-  private MethodInfo? FindMethodInAssembly(string action, JsonElement args)
+  private MethodInfo? FindMethodInType(string action)
   {
-    foreach (var type in targetAssembly.GetTypes())
+    var method = type
+      .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+      .SingleOrDefault(m => m.Name.Equals(action, StringComparison.OrdinalIgnoreCase));
+
+    if (method != null)
     {
-      IEnumerable<MethodInfo?> methods = type
-        .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
-        .Where(m => m.Name.Equals(action, StringComparison.OrdinalIgnoreCase));
-
-      foreach (var method in methods)
-      {
-        var parameters = method?.GetParameters();
-        var allRequiredParamsPresent = parameters != null && parameters.All(p =>
-          p.HasDefaultValue ||
-          args.EnumerateArray().Any(arg =>
-            arg.EnumerateObject().Any(prop => prop.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase)))
-        );
-
-        if (allRequiredParamsPresent)
-        {
-          return method;
-        }
-
-        throw new ArgumentException("ERR_MISSING_PARAMETER: Missing required parameter.");
-      }
+      return method;
     }
 
-    return null;
+    throw new InvalidOperationException("ERR_INVALID_ACTION");
   }
 
   private object?[] PrepareMethodArguments(MethodInfo method, JsonElement args)
@@ -118,7 +119,7 @@ public class RpcActionHandler(Assembly targetAssembly)
     for (var i = 0; i < parameters.Length; i++)
     {
       var param = parameters[i];
-      var prop = FindPropertyInArray(args, param.Name);
+      var prop = FindPropertyInArray(args, i);
 
       if (prop != null)
       {
@@ -137,7 +138,6 @@ public class RpcActionHandler(Assembly targetAssembly)
             }
             else
             {
-              
               if (param.ParameterType == typeof(bool))
               {
                 methodArgs[i] = prop.Value.GetBoolean();

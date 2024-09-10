@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using Grenache.Utils;
 using Xunit;
 using System.Text.Json;
@@ -12,8 +11,7 @@ public class RpcActionHandlerTests
 
   public RpcActionHandlerTests()
   {
-    var testAssembly = Assembly.GetExecutingAssembly();
-    _handler = new RpcActionHandler(testAssembly);
+    _handler = new RpcActionHandler(typeof(TestClass));
   }
 
   [Fact]
@@ -23,12 +21,7 @@ public class RpcActionHandlerTests
     const string json = """
                                 {
                                     "action": "TestMethod",
-                                    "args": [
-                                        {
-                                            "param1": "value1",
-                                            "param2": 123
-                                        }
-                                    ]
+                                    "args": [ "value1", 123 ]
                                 }
                         """;
 
@@ -64,16 +57,19 @@ public class RpcActionHandlerTests
                         
                                 {
                                     "action": "TestMethod",
-                                    "args": [
-                                        {
-                                            "param1": "value1"
-                                        }
-                                    ]
+                                    "args": [ "value1" ]
                                 }
                         """;
 
     // Assert
-    Assert.Throws<ArgumentException>(() => _handler.HandleAction(json));
+    var testClassInstance = new TestClass();
+
+    // Assert not throws an exception
+    Assert.ThrowsAsync<ArgumentException>(async () =>
+    {
+      var resultDelegate = _handler.HandleAction(json);
+      await resultDelegate(testClassInstance);
+    });
   }
 
   [Fact]
