@@ -36,7 +36,6 @@ public class RpcActionHandler(Type type)
 
     var methodArgs = PrepareMethodArguments(theMethod, argsElement.Value);
 
-    // Check if the method is asynchronous by checking the return type
     var isAsync = typeof(Task).IsAssignableFrom(theMethod.ReturnType);
 
     return async instance =>
