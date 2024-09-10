@@ -57,7 +57,6 @@ public class RpcActionHandler(Type type)
       }
       else
       {
-        // For synchronous methods, return the result directly
         return result;
       }
     };
