@@ -76,8 +76,6 @@ namespace Grenache
 
         foreach (var handler in invocationList)
         {
-          
-            // Since the handler is async, you need to await it
             var rpcHandler = (RpcRequestHandler)handler;
             await rpcHandler(request, SendResponse);
         }
