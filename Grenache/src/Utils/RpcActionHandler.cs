@@ -44,7 +44,6 @@ public class RpcActionHandler(Type type)
 
       if (isAsync)
       {
-        // Await the result if it's a Task
         await (Task)result;
 
         // If the method returns Task<T>, get the result using reflection
