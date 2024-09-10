@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Grenache.Utils\Grenache.Utils.csproj" />
     <ProjectReference Include="..\Grenache\Grenache.csproj" />
   </ItemGroup>
 

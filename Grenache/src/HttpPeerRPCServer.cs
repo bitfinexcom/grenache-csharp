@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Grenache.Models.PeerRPC;
@@ -44,7 +45,7 @@ namespace Grenache
           Task.Run(() => ProcessRequest(context));
         }
         catch
-        { 
+        {
         }
       }
     }
@@ -63,17 +64,23 @@ namespace Grenache
         var req = RpcServerRequest.FromArray(JsonSerializer.Deserialize<object[]>(json));
         requestId = req.RId.ToString();
         RequestMap.TryAdd(requestId, responseHandler);
-        OnRequestReceived(req);
+        await OnRequestReceived(req);
       }
       catch (Exception e)
       {
-        if (!string.IsNullOrWhiteSpace(requestId) )
+        if (!string.IsNullOrWhiteSpace(requestId))
         {
           RequestMap.TryRemove(requestId, out _);
         }
-        responseHandler.StatusCode = 500;
+
+        var response = new RpcServerResponse
+        {
+          RId = Guid.Parse(requestId),
+          Data = null,
+          Error = e is TargetInvocationException ? e.InnerException?.Message : e.Message
+        };
         responseHandler.ContentType = "application/json";
-        var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(e));
+        var buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response.ToArray()));
         responseHandler.ContentLength64 = buffer.Length;
         await responseHandler.OutputStream.WriteAsync(buffer);
         responseHandler.Close();

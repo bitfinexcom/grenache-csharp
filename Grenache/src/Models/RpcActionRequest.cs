@@ -1,6 +1,6 @@
-namespace Grenache.Utils.Models;
+namespace Grenache.Models;
 
-public class RpcRequest
+public class RpcActionRequest
 {
   public string Action { get; set; }
   public object[] Args { get; set; }

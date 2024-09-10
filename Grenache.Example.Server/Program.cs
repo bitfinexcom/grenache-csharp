@@ -15,12 +15,12 @@ namespace Grenache.Example.Server
 
       Link link = new("http://127.0.0.1:30001");
       var pingService = new RpcPingService();
-      var actionHandler = new RpcActionHandler(pingService.GetType().Assembly);
+      var actionHandler = new RpcActionHandler(typeof(RpcPingService));
       _server = new HttpPeerRPCServer(link, 10000);
-      _server.AddRequestHandler((req, res) =>
+      _server.AddRequestHandler(async (req, res) =>
       {
         var resultDelegate = actionHandler.HandleAction(req.Payload);
-        var data = resultDelegate(pingService);
+        var data = await resultDelegate(pingService);
         res.Invoke(new RpcServerResponse { RId = req.RId, Data = data });
       });
       var started = await _server.Listen("rpc_ping", 7070);

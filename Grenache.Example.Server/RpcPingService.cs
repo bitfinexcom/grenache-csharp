@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+
 namespace Grenache.Example.Server;
 
 public class RpcPingService
@@ -9,7 +12,22 @@ public class RpcPingService
     return string.Empty;
   }
 
-  public static Point Point(Point point) => new Point { X = point.X * 5 };
+  public async Task<string> GreetAsync(string message)
+  {
+    if (message.Equals("hello", System.StringComparison.CurrentCultureIgnoreCase))
+      return await Task.FromResult("world");
+    return await Task.FromResult(string.Empty);
+  }
+
+  public static Point Point(Point point)
+  {
+    if (point.X < 0)
+    {
+      throw new ArgumentException("X should be a positive number");
+    }
+
+    return new Point { X = point.X * 5 };
+  }
 
   public static Point2D Point2D(Point2D point) =>
     new Point2D

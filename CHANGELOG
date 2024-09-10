@@ -1,3 +1,9 @@
+0.11.0
+- Adds support for responses from async methods.
+- Removed Utils Project
+- Improved Error Handling
+- Adjusted action handler to pass directly params instead of named params to comply with protocol
+
 0.10.0
 - Adds reference to the Utils project.
 
