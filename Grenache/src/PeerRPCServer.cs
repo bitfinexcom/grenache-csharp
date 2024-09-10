@@ -72,7 +72,6 @@ namespace Grenache
     {
       if (RequestReceived != null)
       {
-        // Get the list of invocation delegates
         var invocationList = RequestReceived.GetInvocationList();
 
         foreach (var handler in invocationList)
