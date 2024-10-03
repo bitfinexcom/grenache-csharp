@@ -167,6 +167,10 @@ public class RpcActionHandler(Type type)
           throw new ArgumentException($"ERR_MISSING_PARAMETER: Missing required parameter: {param.Name}");
         }
       }
+      else if (param.HasDefaultValue)
+      {
+        methodArgs[i] = param.DefaultValue;
+      }
     }
 
     return methodArgs;
