@@ -49,16 +49,6 @@ This RPC Server example introduces a service called `RpcPingService` within the 
 
 The server handles the incoming requests in the `RpcPingService` class by identifying the method specified in the request body using the following template:
 
-```csharp
-var rpcRes = await client.Request("rpc_ping",
-    """
-    {
-        "action": "Greet",
-        "args": [{ "message": "hello" }]
-    }
-    """);
-```
-
 **Server:**
 
 ```csharp
