@@ -57,16 +57,6 @@ var rpcRes = await client.Request("rpc_ping",
         "args": [{ "message": "hello" }]
     }
     """);
-
-
-Internally the DHT is asked for the IP of the server and then the
-request is done as Peer-to-Peer request via websockets.
-
-**Grape:**
-
-```bash
-grape --dp 20001 --aph 30001 --bn '127.0.0.1:20002'
-grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'
 ```
 
 **Server:**
