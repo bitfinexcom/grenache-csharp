@@ -132,5 +132,13 @@ After that simply run:
 ./Grenache.Test/test.sh
 ```
 
+### Environment Setup
+
+The setup process varies slightly depending on the operating system:
+
+- **Linux / Mac**: All examples function as intended without additional configuration.
+- **Windows**: Some systems may experience issues related to port usage. Running the IDE with administrator privileges may be required to ensure the examples operate correctly.
+
+
 ## Licensing
 Licensed under Apache License, Version 2.0
